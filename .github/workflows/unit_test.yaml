@@ -13,6 +13,9 @@ jobs:
       matrix:
         python-version: ["3.10"]
 
+    env:
+      DEV_KEY: ${{secrets.DEV_API_KEY}} 
+      TEST_KEY: ${{secrets.TEST_API_KEY}} 
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
@@ -26,12 +29,9 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Run Unit Tests with pytest
         env:
-          DEV_KEY: ${{secrets.DEV_API_KEY}} 
-          TEST_KEY: ${{secrets.TEST_API_KEY}} 
           BACKEND_URL: ${{ github.ref == 'refs/heads/development' && 'https://dev-platform-api.aixplain.com' || 'https://test-platform-api.aixplain.com' }}
           MODELS_RUN_URL: ${{ github.ref == 'refs/heads/development' && 'https://dev-models.aixplain.com/api/v1/execute' || 'https://test-models.aixplain.com/api/v1/execute' }}
           TEAM_API_KEY:  ${{ github.ref == 'refs/heads/development' && DEV_KEY || TEST_KEY}}
-
         run: |
           coverage run -m pytest -v -s tests/unit
       - name: Generate Coverage Report
