@@ -12,11 +12,13 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.10"]
+    
 
-    env:
-      DEV_KEY: ${{secrets.DEV_API_KEY}} 
-      TEST_KEY: ${{secrets.TEST_API_KEY}} 
     steps:
+      - name: Set Environment Variables
+        env:
+          DEV_KEY: ${{secrets.DEV_API_KEY}} 
+          TEST_KEY: ${{secrets.TEST_API_KEY}} 
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
